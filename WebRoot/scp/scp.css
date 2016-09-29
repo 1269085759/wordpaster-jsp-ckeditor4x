@@ -1,0 +1,7 @@
+﻿/*文件列表框*/
+.scpPanel
+{
+    font-family: 新宋体;font-size: 12px; background-color: #FFFFFF; display:none;
+}
+.scpPanel img{ float:left; border:0;}
+.scpPanel span{ float:left;}
