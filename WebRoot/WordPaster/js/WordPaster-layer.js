@@ -58,6 +58,7 @@ var WordPasterConfig = {
 	, "CrxPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.crx"
 	//Chrome 45
     , "NatHostName"         : "com.xproer.wordpaster"//
+    , "ExtensionID"         : "nmopflahkgegkgkfnhdjpflfjipkpjpk"
 	, "NatPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.nat.crx"
 	, "ExePath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
 };
@@ -99,6 +100,7 @@ function WordPasterManager()
     this.ffPaster = null;
     this.ieParser = null;
     this.setuped = false;//控件是否安装
+    this.natInstalled = false;
     this.filesPanel = null;//jquery obj
     this.fileItem = null;//jquery obj
     this.line = null;//jquery obj
@@ -114,6 +116,10 @@ function WordPasterManager()
 	this.fileMap = new Object();//文件映射表。
 	this.postType = WordPasteImgType.word;//默认是word
 	this.working = false;//正在上传中
+	this.event = {
+	    "postComplete": function (url) { }
+        , "queueComplete": function () { }
+	};
 
     //IE浏览器信息管理对象
 	this.BrowserIE = {
@@ -165,10 +171,9 @@ function WordPasterManager()
             {
                 for (var i = 0; i < mimetype.length; i++)
                 {
-                    if (mimetype[i].type == _this.Config["XpiType"].toLowerCase())
-                    {
-                        return mimetype[i].enabledPlugin;
-                    }
+                	var exist = mimetype[i].type == _this.Config["XpiType"];//low ff
+                	if(!exist) exist = mimetype[i].type == _this.Config["XpiType"].toLowerCase();//high ff
+                	if(exist) return mimetype[i].enabledPlugin;
                 }
             }
             else
@@ -237,6 +242,11 @@ function WordPasterManager()
 	    }
 		, "Check": function ()
 		{
+		    var img = document.createElement('img');
+		    img.src = 'chrome-extension://' + _this.Config.ExtensionID + '/icon.jpg';
+		    img.onload = function () { _this.natInstalled = true; };
+		    img.onerror = function () { _this.setupTip(); };
+		    //chrome.management.get(_this.Config.ExtensionID, function (exInf) { _this.natInstall = true; });
 		    return true;
 		}
 	    , "CheckVer": function ()
@@ -382,6 +392,7 @@ function WordPasterManager()
 	        {
 	            _this.chrome45 = true;//
 	            _this.Browser = this.BrowserNat;
+	            _this.Browser.Check();
 	            this.WordParser = this.WordParserNat;
 	        }
 	    }
@@ -390,9 +401,11 @@ function WordPasterManager()
 	this.setupTip = function ()
 	{
 	    this.OpenDialogPaste();
-	    var dom = this.imgMsg.html("未检测到控件，请先<a name='aCtl'>安装控件</a>");
+	    var dom = this.imgMsg.html("未检测到控件，请先<a name='aCtl'>安装控件</a>,Chrome 45+需要单独<a name='aCrx'>安装扩展</a>");
 	    var lnk = dom.find('a[name="aCtl"]');
 	    lnk.attr("href", this.Config["ExePath"]);
+	    var crx = dom.find('a[name="aCrx"]');
+	    crx.attr("href", this.Config["NatPath"]);
 	    this.imgPercent.hide();
 	    this.imgIco.hide();
 	};
@@ -591,6 +604,7 @@ function WordPasterManager()
 	    }//chrome 45直接调用控件命令
 	    if (this.chrome45)
 	    {
+	        if (!this.natInstalled) { this.setupTip(); return;}
 	        _this.WordParser.Paste();
 	    }//非chrome 45则进行判断
 	    else
@@ -793,6 +807,7 @@ function WordPasterManager()
 	};
 	this.WordParser_PostComplete = function (json)
 	{
+	    this.event.postComplete(json.value);
 	    this.imgPercent.text("100%");
 	    this.imgMsg.text("上传完成");
 	    var img = "<img src=\"";
@@ -815,6 +830,7 @@ function WordPasterManager()
 	};
 	this.File_PostComplete = function (json)
 	{
+	    this.event.postComplete(json.pathSvr);
 	    var up = this.fileMap[json.id];
 	    up.postComplete(json);
 	    delete up;//
@@ -842,6 +858,7 @@ function WordPasterManager()
 	    }
 	    this.CloseDialogFile();
 	    _this.working = false;
+	    this.event.queueComplete();
 	};
 	this.WordParser_StateChanged = function (msg)
 	{
