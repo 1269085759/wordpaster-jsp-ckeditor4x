@@ -21,6 +21,7 @@ div.UploaderItem a.Btn,div.UploaderItem a.Btn:hover{text-decoration: underline; 
 .panel-paster{font-family: 新宋体;font-size: 12px; background-color: #FFFFFF; height: 50px; width: 150px;}
 .panel-paster img{ float:left; border:0;}
 .panel-paster span{ float:left;}
+.panel-setup {padding:10px;}
 /**/
 .demoHeaders { margin-top: 2em; }
 #dialog_link {padding: .4em 1em .4em 20px;text-decoration: none;position: relative;}
