@@ -55,16 +55,6 @@ String clientCookie = request.getHeader("Cookie");
     	{
         	pasterMgr.Config["PostUrl"] = "";
         	pasterMgr.Config["Cookie"] = "";
-        	pasterMgr.WordParser.Init();
-        }
-
-    	if(pasterMgr.Browser.Check())
-    	{
-        	//控件已安装
-        }
-    	else
-    	{
-        	//控件未安装
         }
 
 		CKEDITOR.config.extraPlugins = 'imagepaster,netpaster';		
