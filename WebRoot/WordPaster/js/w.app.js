@@ -8,10 +8,11 @@
     , supportFF: function () {
         var mimetype = navigator.mimeTypes;
         if (typeof mimetype == "object" && mimetype.length) {
-            for (var i = 0; i < mimetype.length; i++) {                
+            for (var i = 0; i < mimetype.length; i++)
+            {
                 var enabled = mimetype[i].type == this.ins.Config.XpiType;
                 if (!enabled) enabled = mimetype[i].type == this.ins.Config.XpiType.toLowerCase();
-                if (enabled) return mimetype[i].enabledPlugin;                
+                if (enabled) return mimetype[i].enabledPlugin;
             }
         }
         else {

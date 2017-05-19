@@ -140,7 +140,7 @@ function WordPasterManager()
 	} //Firefox
 	else if (this.firefox)
     {
-		if (!this.app.supportFF())//仍然支持npapi
+        if (!this.app.supportFF())//仍然支持npapi
         {
             this.app.postMessage = this.app.postMessageEdge;
             this.edge = true;
@@ -162,14 +162,15 @@ function WordPasterManager()
 	}
 	else if (this.edge)
     {
-        this.app.postMessage = postMessageEdge;
+        this.app.postMessage = this.app.postMessageEdge;
 	}
-    this.setup_tip = function () {
+    this.setup_tip = function ()
+    {
         this.ui.setup.skygqbox();
         var dom = this.ui.setup.html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
-    };
+    }
     this.need_update = function ()
     {
         var dom = this.ui.setup.html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
@@ -387,23 +388,6 @@ function WordPasterManager()
 	};
 
 	/*
-	验证文件名是否存在
-	参数:
-		fileName 包含完整路径的文件名称
-	*/
-	this.Exist = function(fileName)
-	{
-		for (a in this.UploaderList)
-		{
-			if (this.UploaderList[a].LocalFile == fileName)
-			{
-				return true;
-			}
-		}
-		return false;
-	};
-
-	/*
 	根据ID删除上传任务
 	参数:
 	fileID
@@ -615,7 +599,7 @@ function WordPasterManager()
 	};
 	this.load_complete_edge = function (json)
 	{
-		_this.app.init();
+        _this.app.init();
     };
     this.load_complete = function (json)
     {
