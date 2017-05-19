@@ -8,17 +8,14 @@
     , supportFF: function () {
         var mimetype = navigator.mimeTypes;
         if (typeof mimetype == "object" && mimetype.length) {
-            for (var i = 0; i < mimetype.length; i++) {
-                try {
-                    var enabled = mimetype[i].type == this.ins.Config.firefox.type;
-                    if (!enabled) enabled = mimetype[i].type == this.ins.Config.firefox.type.toLowerCase();
-                    if (enabled) return mimetype[i].enabledPlugin;
-                }
-                catch (e){ }
+            for (var i = 0; i < mimetype.length; i++) {                
+                var enabled = mimetype[i].type == this.ins.Config.XpiType;
+                if (!enabled) enabled = mimetype[i].type == this.ins.Config.XpiType.toLowerCase();
+                if (enabled) return mimetype[i].enabledPlugin;                
             }
         }
         else {
-            mimetype = [this.ins.Config.firefox.type];
+            mimetype = [this.ins.Config.XpiType];
         }
         if (mimetype) {
             return mimetype.enabledPlugin;

@@ -81,24 +81,6 @@ var WordPasteImgType = {local:0/*本地图片*/,network:1/*网络图片*/,word:2
 */
 function WordPasterManager()
 {
-    //pageLoad,pageClose
-    this.event = {
-        on: function (eventName, callback) {
-            if (!this[eventName]) {
-                this[eventName] = [];
-            }
-            this[eventName].push(callback);
-        },
-        emit: function (eventName) {
-            var that = this;
-            var params = arguments.length > 1 ? Array.prototype.slice.call(arguments, 1) : [];
-            if (that[eventName]) {
-                Array.prototype.forEach.call(that[eventName], function (arg) {
-                    arg.apply(self, params);
-                });
-            }
-        }
-    };
     var _this = this;
     this.Editor = null;
     this.Fields = {}; //符加信息
@@ -142,14 +124,6 @@ function WordPasterManager()
 	this.chrVer = navigator.appVersion.match(/Chrome\/(\d+)/);
 	if (this.edge) { this.ie = this.firefox = this.chrome = this.chrome45 = false; }
 
-    this.event.on("edgeLoad", function () { _this.app.init(); });
-    this.event.on("pageLoad", function () {
-        _this.setup_check();
-        if (_this.edge) {
-            _this.edgeApp.runChr();
-        }
-        else { _this.app.init(); }
-    });
     $(window).bind("beforeunload", function () {
         if (this.edge) _this.edgeApp.close();
     });
@@ -166,8 +140,7 @@ function WordPasterManager()
 	} //Firefox
 	else if (this.firefox)
     {
-        var ver = browserName.match(/firefox\/(\d+)/);
-        if (parseInt(ver[1]) >= 47)
+		if (!this.app.supportFF())//仍然支持npapi
         {
             this.app.postMessage = this.app.postMessageEdge;
             this.edge = true;
@@ -191,20 +164,11 @@ function WordPasterManager()
     {
         this.app.postMessage = postMessageEdge;
 	}
-    this.setup_check = function ()
-    {
+    this.setup_tip = function () {
         this.ui.setup.skygqbox();
         var dom = this.ui.setup.html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
-    }
-	this.need_setup = function ()
-    {
-        var dom = this.ui.setup.html("未检测到控件，请先<a name='aCtl'>安装控件</a>,Chrome 45+需要单独<a name='aCrx'>安装扩展</a>");
-	    var lnk = dom.find('a[name="aCtl"]');
-	    lnk.attr("href", this.Config["ExePath"]);
-	    var crx = dom.find('a[name="aCrx"]');
-	    crx.attr("href", this.Config["NatPath"]);
     };
     this.need_update = function ()
     {
@@ -286,9 +250,6 @@ function WordPasterManager()
 	    var dom             = $(document.body).append(this.GetHtml());
 	    this.ffPaster       = dom.find('embed[name="ffPaster"]').get(0);
         this.ieParser       = dom.find('object[name="ieParser"]').get(0);
-        this.parter = this.ffPaster;
-        if (this.ie) this.parter = this.ieParser;
-        if (this.ie || this.firefox) this.parter.recvMessage = this.recvMessage;
 	    this.line           = dom.find('div[name="line"]');
 	    this.fileItem       = dom.find('div[name="fileItem"]');
 	    this.filesPanel     = dom.find('div[name="filesPanel"]');
@@ -308,9 +269,6 @@ function WordPasterManager()
 	    var dom             = $("#" + oid).append(this.GetHtml());
 	    this.ffPaster       = dom.find('embed[name="ffPaster"]').get(0);
 	    this.ieParser       = dom.find('object[name="ieParser"]').get(0);
-        this.parter = this.ffPaster;
-        if (this.ie) this.parter = this.ieParser;
-        if (this.ie || this.firefox) this.parter.recvMessage = this.recvMessage;
 	    this.line           = dom.find('div[name="line"]');
 	    this.fileItem       = dom.find('div[name="fileItem"]');
 	    this.filesPanel     = dom.find('div[name="filesPanel"]');
@@ -330,7 +288,17 @@ function WordPasterManager()
 	{
 	    $(function ()
         {
-	        _this.event.emit("pageLoad");
+            if (!_this.edge)
+            {
+                _this.parter = _this.ffPaster;
+                if (_this.ie) _this.parter = _this.ieParser;
+                if (_this.ie || _this.firefox) _this.parter.recvMessage = _this.recvMessage;
+            }
+            _this.setup_tip();
+            if (_this.edge) {
+                _this.edgeApp.runChr();
+            }
+            else { _this.app.init(); }
 	    });
 	};
 
@@ -375,7 +343,7 @@ function WordPasterManager()
 	{
 	    if (!this.setuped)
         {
-            this.need_setup(); return;
+            this.setup_tip(); return;
 	    }
 	    if (!this.chrome45 && !_this.edge)
 	    {
@@ -397,7 +365,7 @@ function WordPasterManager()
 	{
 	    if (!this.setuped)
         {
-            this.need_setup(); return;
+            this.setup_tip(); return;
         }
         this.app.paste();
 	};
@@ -647,7 +615,7 @@ function WordPasterManager()
 	};
 	this.load_complete_edge = function (json)
 	{
-	    _this.event.emit("edgeLoad");
+		_this.app.init();
     };
     this.load_complete = function (json)
     {
@@ -660,7 +628,7 @@ function WordPasterManager()
             }
         }
         if (needUpdate) this.need_update();
-        else { this.ui.setup.hide(); }
+        else { $('#wrapClose').click(); }
     };
     this.recvMessage = function (msg)
 	{
