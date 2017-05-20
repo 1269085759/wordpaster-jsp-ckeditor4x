@@ -10,6 +10,9 @@
     <script type="text/javascript" src="WordPaster/js/jquery-1.4.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="WordPaster/js/skygqbox.js" charset="utf-8"></script>
+    <script type="text/javascript" src="WordPaster/js/w.edge.js" charset="utf-8"></script>
+    <script type="text/javascript" src="WordPaster/js/w.app.js" charset="utf-8"></script>
+    <script type="text/javascript" src="WordPaster/js/w.file.js" charset="utf-8"></script>
     <script type="text/javascript" src="WordPaster/js/WordPaster.js" charset="utf-8"></script>
     <script type="text/javascript" src="scp/scp.js" charset="utf-8"></script>
 </head>
@@ -34,13 +37,13 @@
 	<!--创建FCKEditor控件-->
     <textarea id="editor1" name="editor1"><img src="http://mat1.gtimg.com/www/images/qq2012/qqlogo_1x.png" width="134" height="44" /></textarea>
     <script type="text/javascript">
-    	var pasterMgr = new PasterManager();
+    	var pasterMgr = new WordPasterManager();
         //pasterMgr.Config["PostUrl"] = "http://www.ncmem.com/products/upload.asp"
-        pasterMgr.Config["PostUrl"] = "http://localhost:8080/WordPasterCKEditor4x/upload.jsp"
+        pasterMgr.Config["PostUrl"] = "http://localhost:8080/WordPaster2CKEditor4x/upload.jsp"
         pasterMgr.Load();//加载控件
 
         var scpMgr = new CaptureManager();
-        scpMgr.Config["PostUrl"] = "http://localhost:8080/WordPasterCKEditor4x/upload.jsp";
+        scpMgr.Config["PostUrl"] = "http://localhost:8080/WordPaster2CKEditor4x/upload.jsp";
 
         $(document).ready(function ()
         {
