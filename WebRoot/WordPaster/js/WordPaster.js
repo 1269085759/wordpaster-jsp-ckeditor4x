@@ -1,8 +1,7 @@
 ﻿/*
-	版权所有 2009-2015 荆门泽优软件有限公司 保留所有版权。
-	邮箱:1085617561@qq.com
-	描述:Word图片上传控件
-	此文件实现上传后自动关闭上传窗口的功能
+	版权所有 2009-2017 荆门泽优软件有限公司 保留所有版权。
+	官网：http://www.ncmem.com/
+    论坛：http://bbs.ncmem.com/
 	更新记录：
 		2012-07-04 增加对IE9的支持。
 */
@@ -46,23 +45,23 @@ var WordPasterConfig = {
 	, "PostUrl"			    : "http://www.ncmem.com/products/word-imagepaster/fckeditor2461/asp.net/upload.aspx"
     //x86
 	, "ClsidParser"		    : "2404399F-F06B-477F-B407-B8A5385D2C5E"
-	, "CabPath"			    : "http://localhost:83/WordPaster.cab"
+	, "CabPath"			    : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.cab"
 	//x64
 	, "ClsidParser64"		: "7C3DBFA4-DDE6-438A-BEEA-74920D90764B"
-	, "CabPath64"			: "http://www.ncmem.com/download/WordPaster2/WordPaster64.cab"
+	, "CabPath64"			: "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster64.cab"
 	//Firefox
 	, "XpiType"	            : "application/npWordPaster2"
-	, "XpiPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.xpi"
+	, "XpiPath"		        : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.xpi"
 	//Chrome
 	, "CrxName"		        : "npWordPaster2"
 	, "CrxType"	            : "application/npWordPaster2"
-	, "CrxPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.crx"
+	, "CrxPath"		        : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.crx"
 	//Chrome 45
     , "NatHostName"         : "com.xproer.wordpaster"//
     , "ExtensionID"         : "nmopflahkgegkgkfnhdjpflfjipkpjpk"
-	, "NatPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.nat.crx"
+	, "NatPath"		        : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.nat.crx"
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
-	, "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
+    , "ExePath": "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.exe"
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
