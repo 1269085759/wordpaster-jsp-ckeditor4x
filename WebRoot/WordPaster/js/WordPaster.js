@@ -32,7 +32,8 @@ var WordPasterConfig = {
 	, "LogFile"			    : "f:\\log.txt"//日志文件路径
 	, "PasteWordType"	    : ""	//粘贴WORD的图片格式。JPG/PNG/GIF/BMP，推荐使用JPG格式，防止出现大图片。
 	, "PasteImageType"	    : ""	//粘贴文件，剪帖板的图片格式，为空表示本地图片格式。JPG/PNG/GIF/BMP
-	, "JpgQuality"		    : "100"	//JPG质量。0~100
+	, "PasteImgSrc"		    : ""	//shape:优先使用源公式图片，img:使用word自动生成的图片
+    , "JpgQuality"		    : "100"	//JPG质量。0~100
 	, "QueueCount"		    : "5"	//同时上传线程数
 	, "CryptoType"		    : "uuid"//名称计算方式,md5,crc,sha1,uuid，其中uuid为随机名称
 	, "ThumbWidth"		    : "0"	//缩略图宽度。0表示不使用缩略图
@@ -94,6 +95,8 @@ function WordPasterManager()
     this.ui = { setup: null ,single:null};
     this.ffPaster = null;
     this.ieParser = null;
+    this.ffPasterName = "ffPaster" + new Date().getTime();
+    this.iePasterName = "iePaster" + new Date().getTime();
     this.setuped = false;//控件是否安装
     this.natInstalled = false;
     this.filesPanel = null;//jquery obj
@@ -164,13 +167,12 @@ function WordPasterManager()
     {
         this.app.postMessage = this.app.postMessageEdge;
 	}
-    this.setup_tip = function ()
-    {
+    this.setup_tip = function () {
         this.ui.setup.skygqbox();
         var dom = this.ui.setup.html("控件加载中，如果未加载成功请先<a name='w-exe'>安装控件</a>");
         var lnk = dom.find('a[name="w-exe"]');
         lnk.attr("href", this.Config["ExePath"]);
-    }
+    };
     this.need_update = function ()
     {
         var dom = this.ui.setup.html("发现新版本，请<a name='w-exe' href='#'>更新</a>");
@@ -207,9 +209,9 @@ function WordPasterManager()
 			静态加截控件代码，在复杂WEB系统中或者框架页面中请静态方式加截Word解析组件(Xproer.WordParser)。
 			<object id="objWordParser" classid="clsid:2404399F-F06B-477F-B407-B8A5385D2C5E"	width="1" height="1" ></object>
 		*/
-	    if(!this.chrome45) acx += '<embed name="ffPaster" type="' + this.Config["XpiType"] + '" pluginspage="' + this.Config["XpiPath"] + '" width="1" height="1" id="objWordPaster"/>';
-	    //Word解析组件
-	    acx += ' <object name="ieParser" classid="clsid:' + this.Config["ClsidParser"] + '"';
+        if (!this.chrome45) acx += '<embed name="' + this.ffPasterName + '" type="' + this.Config["XpiType"] + '" pluginspage="' + this.Config["XpiPath"] + '" width="1" height="1"/>';
+        //Word解析组件
+        acx += ' <object name="' + this.iePasterName + '" classid="clsid:' + this.Config["ClsidParser"] + '"';
 	    acx += ' codebase="' + this.Config["CabPath"] + '#version=' + this.Config["Version"] + '"';
 	    acx += ' width="1" height="1" ></object>';
 	    //单张图片上传窗口
@@ -248,9 +250,9 @@ function WordPasterManager()
     //加载控件及HTML元素
 	this.Load = function ()
 	{
-	    var dom             = $(document.body).append(this.GetHtml());
-	    this.ffPaster       = dom.find('embed[name="ffPaster"]').get(0);
-        this.ieParser       = dom.find('object[name="ieParser"]').get(0);
+        var dom             = $(document.body).append(this.GetHtml());
+        this.ffPaster       = dom.find('embed[name="' + this.ffPasterName + '"]').get(0);
+        this.ieParser       = dom.find('object[name="' + this.iePasterName + '"]').get(0);
 	    this.line           = dom.find('div[name="line"]');
 	    this.fileItem       = dom.find('div[name="fileItem"]');
 	    this.filesPanel     = dom.find('div[name="filesPanel"]');
@@ -268,8 +270,8 @@ function WordPasterManager()
 	this.LoadTo = function (oid)
 	{
 	    var dom             = $("#" + oid).append(this.GetHtml());
-	    this.ffPaster       = dom.find('embed[name="ffPaster"]').get(0);
-	    this.ieParser       = dom.find('object[name="ieParser"]').get(0);
+        this.ffPaster       = dom.find('embed[name="' + this.ffPasterName + '"]').get(0);
+        this.ieParser       = dom.find('object[name="' + this.iePasterName + '"]').get(0);
 	    this.line           = dom.find('div[name="line"]');
 	    this.fileItem       = dom.find('div[name="fileItem"]');
 	    this.filesPanel     = dom.find('div[name="filesPanel"]');
@@ -293,7 +295,7 @@ function WordPasterManager()
             {
                 _this.parter = _this.ffPaster;
                 if (_this.ie) _this.parter = _this.ieParser;
-                if (_this.ie || _this.firefox) _this.parter.recvMessage = _this.recvMessage;
+                _this.parter.recvMessage = _this.recvMessage;
             }
             _this.setup_tip();
             if (_this.edge) {
