@@ -129,18 +129,15 @@ function WordPasterManager()
     $(window).bind("beforeunload", function () {
         if (this.edge) _this.edgeApp.close();
     });
-	if (this.ie)
+    //Win64
+    if (window.navigator.platform == "Win64")
 	{
-	    //Win64
-	    if (window.navigator.platform == "Win64")
-	    {
-	        _this.Config["ClsidParser"] = this.Config["ClsidParser64"];
-	        _this.Config["CabPath"] = this.Config["CabPath64"];
-	        //ActiveX
-	        _this.ActiveX["WordParser"] = this.ActiveX["WordParser64"];
-	    }
-	} //Firefox
-	else if (this.firefox)
+        _this.Config["ClsidParser"] = this.Config["ClsidParser64"];
+        _this.Config["CabPath"] = this.Config["CabPath64"];
+        //ActiveX
+        _this.ActiveX["WordParser"] = this.ActiveX["WordParser64"];   
+	}//Firefox
+	if (this.firefox)
     {
         if (!this.app.supportFF())//仍然支持npapi
         {
@@ -213,6 +210,7 @@ function WordPasterManager()
         acx += ' <object name="' + this.iePasterName + '" classid="clsid:' + this.Config["ClsidParser"] + '"';
 	    acx += ' codebase="' + this.Config["CabPath"] + '#version=' + this.Config["Version"] + '"';
 	    acx += ' width="1" height="1" ></object>';
+	    if (this.edge) acx = '';
 	    //单张图片上传窗口
 	    acx += '<div name="imgPasterDlg" class="panel-paster" style="display:none;">';
 	    acx += '<img name="ico" id="infIco" alt="进度图标" src="' + this.Config["IcoUploader"] + '" /><span name="msg">图片上传中...</span><span name="percent">10%</span>';
