@@ -45,23 +45,20 @@ var WordPasterConfig = {
 	, "PostUrl"			    : "http://www.ncmem.com/products/word-imagepaster/fckeditor2461/asp.net/upload.aspx"
     //x86
 	, "ClsidParser"		    : "2404399F-F06B-477F-B407-B8A5385D2C5E"
-	, "CabPath"			    : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.cab"
+	, "CabPath"			    : "http://www.ncmem.com/download/WordPaster2/WordPaster.cab"
 	//x64
 	, "ClsidParser64"		: "7C3DBFA4-DDE6-438A-BEEA-74920D90764B"
-	, "CabPath64"			: "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster64.cab"
+	, "CabPath64"			: "http://www.ncmem.com/download/WordPaster2/WordPaster64.cab"
 	//Firefox
 	, "XpiType"	            : "application/npWordPaster2"
-	, "XpiPath"		        : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.xpi"
+	, "XpiPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.xpi"
 	//Chrome
 	, "CrxName"		        : "npWordPaster2"
 	, "CrxType"	            : "application/npWordPaster2"
-	, "CrxPath"		        : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.crx"
-	//Chrome 45
-    , "NatHostName"         : "com.xproer.wordpaster"//
-    , "ExtensionID"         : "nmopflahkgegkgkfnhdjpflfjipkpjpk"
-	, "NatPath"		        : "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.nat.crx"
+	, "CrxPath"		        : "http://www.ncmem.com/download/WordPaster2/WordPaster.crx"
+    //Edge
     , edge: { protocol: "wordpaster", port: 9200, visible: false }
-    , "ExePath": "http://www.ncmem.com/download/WordPaster2/v2.1/WordPaster.exe"
+    , "ExePath": "http://www.ncmem.com/download/WordPaster2/WordPaster.exe"
 };
 function debugMsg(m) { $("#msg").append(m);}
 var WordPasterActiveX = {
